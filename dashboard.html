@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Fraudes UNICO Banda Ancha</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js will be loaded inline for offline functionality -->
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .reports-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .filter-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📊 Dashboard de Fraudes UNICO Banda Ancha</h1>
+        <p class="subtitle">Análisis y visualización de casos reportados</p>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <!-- Navigation -->
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <a href="index.html" style="background: #27ae60; color: white; padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; margin-right: 1rem;">
+                    ← Volver al Formulario
+                </a>
+                <button id="refreshData" style="background: #3498db; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 5px; cursor: pointer;">
+                    🔄 Actualizar Datos
+                </button>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReports">-</div>
+                    <div class="stat-label">Total de Denuncias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalOperators">-</div>
+                    <div class="stat-label">Operadores Involucrados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalFiles">-</div>
+                    <div class="stat-label">Archivos de Prueba</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="recentReports">-</div>
+                    <div class="stat-label">Reportes Este Mes</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <h3>🔍 Filtros</h3>
+                <div class="filter-group">
+                    <div class="form-group">
+                        <label for="filterOperator">Operador</label>
+                        <select id="filterOperator">
+                            <option value="">Todos los operadores</option>
+                            <option value="telefonica">Telefónica/Movistar</option>
+                            <option value="orange">Orange</option>
+                            <option value="vodafone">Vodafone</option>
+                            <option value="masmovil">MásMóvil</option>
+                            <option value="otro">Otros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterDateFrom">Desde</label>
+                        <input type="date" id="filterDateFrom">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterDateTo">Hasta</label>
+                        <input type="date" id="filterDateTo">
+                    </div>
+                    <div class="form-group">
+                        <button class="filter-btn" onclick="applyFilters()">Aplicar Filtros</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts (without Chart.js for now) -->
+            <div class="chart-container">
+                <h3>📈 Denuncias por Operador</h3>
+                <div id="operatorChart" style="padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 5px;">
+                    <div id="operatorChartContent">
+                        <p style="color: #666; font-style: italic;">Gráfico de denuncias por operador (datos disponibles tras registrar casos)</p>
+                        <div id="operatorStats" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>📅 Tendencia Mensual de Denuncias</h3>
+                <div id="monthlyChart" style="padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 5px;">
+                    <div id="monthlyChartContent">
+                        <p style="color: #666; font-style: italic;">Gráfico de tendencia mensual (datos disponibles tras registrar casos)</p>
+                        <div id="monthlyStats" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Table -->
+            <div class="reports-table">
+                <h3 style="padding: 1.5rem; margin: 0; background: #f8f9fa; color: #2c3e50;">
+                    📋 Lista de Denuncias Recientes
+                </h3>
+                <div class="table-container">
+                    <table id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Ubicación</th>
+                                <th>Ref. Catastral</th>
+                                <th>Operador</th>
+                                <th>Contacto</th>
+                                <th>Estado</th>
+                                <th>Archivos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr>
+                                <td colspan="7" class="loading">Cargando datos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Export Options -->
+            <div style="margin-top: 2rem; text-align: center;">
+                <button onclick="exportFilteredData()" style="background: #27ae60; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem;">
+                    📊 Exportar Datos Filtrados
+                </button>
+                <button onclick="exportStatistics()" style="background: #8e44ad; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem;">
+                    📈 Exportar Estadísticas
+                </button>
+                <button onclick="generateReport()" style="background: #e67e22; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem;">
+                    📄 Generar Informe PDF
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <strong>Dashboard de Análisis:</strong> 
+                Datos almacenados localmente en el navegador | 
+                <a href="index.html">Reportar nuevo caso</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        class DashboardApp {
+            constructor() {
+                this.database = new FraudDatabase();
+                this.allReports = [];
+                this.filteredReports = [];
+                this.charts = {};
+                this.init();
+            }
+
+            async init() {
+                try {
+                    await this.database.initDB();
+                    await this.loadData();
+                    this.setupEventListeners();
+                } catch (error) {
+                    console.error('Error initializing dashboard:', error);
+                    this.showError('Error al cargar el dashboard');
+                }
+            }
+
+            async loadData() {
+                try {
+                    this.allReports = await this.database.getAllReports();
+                    this.filteredReports = [...this.allReports];
+                    this.updateStatistics();
+                    this.updateCharts();
+                    this.updateTable();
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.showError('Error al cargar los datos');
+                }
+            }
+
+            updateStatistics() {
+                const totalReports = this.filteredReports.length;
+                const operators = new Set(this.filteredReports.map(r => r.operadorDeclarante)).size;
+                
+                // Count total files (estimate based on required files per report)
+                const totalFiles = this.filteredReports.length * 2; // Minimum 2 files per report
+                
+                // Recent reports (this month)
+                const thisMonth = new Date().toISOString().substring(0, 7);
+                const recentReports = this.filteredReports.filter(r => 
+                    r.fechaCreacion && r.fechaCreacion.substring(0, 7) === thisMonth
+                ).length;
+
+                document.getElementById('totalReports').textContent = totalReports;
+                document.getElementById('totalOperators').textContent = operators;
+                document.getElementById('totalFiles').textContent = totalFiles + '+';
+                document.getElementById('recentReports').textContent = recentReports;
+            }
+
+            updateCharts() {
+                this.updateOperatorChart();
+                this.updateMonthlyChart();
+            }
+
+            updateOperatorChart() {
+                const operatorCounts = {};
+                this.filteredReports.forEach(report => {
+                    const operator = report.operadorDeclarante || 'No especificado';
+                    operatorCounts[operator] = (operatorCounts[operator] || 0) + 1;
+                });
+
+                const content = document.getElementById('operatorStats');
+                if (Object.keys(operatorCounts).length === 0) {
+                    content.innerHTML = '<p style="color: #999;">No hay datos para mostrar</p>';
+                    return;
+                }
+
+                let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">';
+                Object.entries(operatorCounts).forEach(([operator, count]) => {
+                    const percentage = ((count / this.filteredReports.length) * 100).toFixed(1);
+                    html += `
+                        <div style="background: white; padding: 1rem; border-radius: 5px; text-align: center; border: 1px solid #ddd;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #e74c3c;">${count}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${this.translateOperator(operator)}</div>
+                            <div style="font-size: 0.8rem; color: #999;">${percentage}%</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                content.innerHTML = html;
+            }
+
+            updateMonthlyChart() {
+                const monthlyCounts = {};
+                this.filteredReports.forEach(report => {
+                    if (report.fechaCreacion) {
+                        const month = report.fechaCreacion.substring(0, 7);
+                        monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
+                    }
+                });
+
+                const content = document.getElementById('monthlyStats');
+                if (Object.keys(monthlyCounts).length === 0) {
+                    content.innerHTML = '<p style="color: #999;">No hay datos para mostrar</p>';
+                    return;
+                }
+
+                const sortedMonths = Object.keys(monthlyCounts).sort();
+                let html = '<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">';
+                sortedMonths.forEach(month => {
+                    const date = new Date(month + '-01');
+                    const monthName = date.toLocaleDateString('es-ES', { 
+                        year: 'numeric', 
+                        month: 'short' 
+                    });
+                    html += `
+                        <div style="background: white; padding: 1rem; border-radius: 5px; text-align: center; border: 1px solid #ddd; min-width: 100px;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #3498db;">${monthlyCounts[month]}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${monthName}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                content.innerHTML = html;
+            }
+
+            updateTable() {
+                const tbody = document.getElementById('reportsTableBody');
+                
+                if (this.filteredReports.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="no-data">No hay datos que mostrar</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = this.filteredReports
+                    .slice(0, 20) // Show last 20 reports
+                    .reverse() // Most recent first
+                    .map(report => `
+                        <tr>
+                            <td>${this.formatDate(report.fechaCreacion)}</td>
+                            <td title="${report.direccion || 'No especificado'}">
+                                ${this.truncateText(report.direccion || 'No especificado', 30)}
+                            </td>
+                            <td title="${report.referenciaCatastral || 'No especificado'}">
+                                ${this.truncateText(report.referenciaCatastral || 'No especificado', 15)}
+                            </td>
+                            <td>${this.translateOperator(report.operadorDeclarante)}</td>
+                            <td title="${report.email || 'No especificado'}">
+                                ${this.truncateText(report.email || 'No especificado', 20)}
+                            </td>
+                            <td><span class="status-pending">${report.estado || 'Pendiente'}</span></td>
+                            <td>2+ archivos</td>
+                        </tr>
+                    `).join('');
+            }
+
+            formatDate(dateString) {
+                if (!dateString) return 'No especificado';
+                return new Date(dateString).toLocaleDateString('es-ES');
+            }
+
+            truncateText(text, maxLength) {
+                if (text.length <= maxLength) return text;
+                return text.substring(0, maxLength) + '...';
+            }
+
+            translateOperator(operator) {
+                const translations = {
+                    'telefonica': 'Telefónica/Movistar',
+                    'orange': 'Orange',
+                    'vodafone': 'Vodafone',
+                    'masmovil': 'MásMóvil',
+                    'otro': 'Otro'
+                };
+                return translations[operator] || operator || 'No especificado';
+            }
+
+            setupEventListeners() {
+                document.getElementById('refreshData').addEventListener('click', () => {
+                    this.loadData();
+                });
+            }
+
+            applyFilters() {
+                const operatorFilter = document.getElementById('filterOperator').value;
+                const dateFromFilter = document.getElementById('filterDateFrom').value;
+                const dateToFilter = document.getElementById('filterDateTo').value;
+
+                this.filteredReports = this.allReports.filter(report => {
+                    // Operator filter
+                    if (operatorFilter && report.operadorDeclarante !== operatorFilter) {
+                        return false;
+                    }
+
+                    // Date filters
+                    if (dateFromFilter && report.fechaCreacion) {
+                        const reportDate = report.fechaCreacion.substring(0, 10);
+                        if (reportDate < dateFromFilter) return false;
+                    }
+
+                    if (dateToFilter && report.fechaCreacion) {
+                        const reportDate = report.fechaCreacion.substring(0, 10);
+                        if (reportDate > dateToFilter) return false;
+                    }
+
+                    return true;
+                });
+
+                this.updateStatistics();
+                this.updateCharts();
+                this.updateTable();
+            }
+
+            exportFilteredData() {
+                if (this.filteredReports.length === 0) {
+                    alert('No hay datos para exportar con los filtros actuales');
+                    return;
+                }
+
+                const dataStr = JSON.stringify(this.filteredReports, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `fraude_datos_filtrados_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+            }
+
+            exportStatistics() {
+                const stats = {
+                    resumen: {
+                        totalDenuncias: this.filteredReports.length,
+                        operadoresInvolucrados: new Set(this.filteredReports.map(r => r.operadorDeclarante)).size,
+                        fechaGeneracion: new Date().toISOString()
+                    },
+                    denunciasPorOperador: {},
+                    tendenciaMensual: {}
+                };
+
+                // Calculate operator breakdown
+                this.filteredReports.forEach(report => {
+                    const operator = report.operadorDeclarante || 'No especificado';
+                    stats.denunciasPorOperador[operator] = (stats.denunciasPorOperador[operator] || 0) + 1;
+                });
+
+                // Calculate monthly trends
+                this.filteredReports.forEach(report => {
+                    if (report.fechaCreacion) {
+                        const month = report.fechaCreacion.substring(0, 7);
+                        stats.tendenciaMensual[month] = (stats.tendenciaMensual[month] || 0) + 1;
+                    }
+                });
+
+                const dataStr = JSON.stringify(stats, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `estadisticas_fraude_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+            }
+
+            generateReport() {
+                // This would generate a PDF report
+                alert('Funcionalidad de generación de PDF en desarrollo. Por ahora, usa la exportación de estadísticas.');
+            }
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                errorDiv.style.margin = '1rem 0';
+
+                const container = document.querySelector('.dashboard-container');
+                container.insertBefore(errorDiv, container.firstChild);
+
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 5000);
+            }
+        }
+
+        // Global functions for button events
+        function applyFilters() {
+            if (window.dashboard) {
+                window.dashboard.applyFilters();
+            }
+        }
+
+        function exportFilteredData() {
+            if (window.dashboard) {
+                window.dashboard.exportFilteredData();
+            }
+        }
+
+        function exportStatistics() {
+            if (window.dashboard) {
+                window.dashboard.exportStatistics();
+            }
+        }
+
+        function generateReport() {
+            if (window.dashboard) {
+                window.dashboard.generateReport();
+            }
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load the FraudDatabase class from script.js
+            const script = document.createElement('script');
+            script.src = 'script.js';
+            script.onload = () => {
+                window.dashboard = new DashboardApp();
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>
