@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denuncia de Fraude UNICO Banda Ancha</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🚨 Denuncia de Fraude UNICO Banda Ancha</h1>
+        <p class="subtitle">Documentar casos de fraude y malas prácticas en el despliegue de fibra óptica en España</p>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="intro">
+                <h2>¿Has sido víctima de fraude en el despliegue de fibra óptica?</h2>
+                <p>
+                    Si los operadores (como Telefónica/Movistar) han declarado cobertura inexistente en tu zona 
+                    o han incumplido compromisos de despliegue, este formulario te ayudará a documentar tu caso.
+                </p>
+                <div class="alert-info">
+                    <strong>Importante:</strong> Necesitarás proporcionar pruebas documentales para respaldar tu denuncia.
+                </div>
+            </section>
+
+            <form id="fraudReportForm" class="fraud-form">
+                <!-- Información Personal -->
+                <section class="form-section">
+                    <h3>📋 Información de Contacto</h3>
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo *</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono">
+                    </div>
+                </section>
+
+                <!-- Información de Ubicación -->
+                <section class="form-section">
+                    <h3>📍 Información de Ubicación</h3>
+                    <div class="form-group">
+                        <label for="direccion">Dirección completa *</label>
+                        <textarea id="direccion" name="direccion" rows="3" required 
+                                  placeholder="Calle, número, piso, puerta, código postal, municipio, provincia"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="referenciaCatastral">Referencia catastral *</label>
+                        <input type="text" id="referenciaCatastral" name="referenciaCatastral" required 
+                               placeholder="Ejemplo: 1234567CS1234S0001WX">
+                        <small class="help-text">
+                            <a href="https://www1.sedecatastro.gob.es/CYCBienInmueble/OVCConCiud.aspx" target="_blank">
+                                🔗 Consultar referencia catastral aquí
+                            </a>
+                        </small>
+                    </div>
+                </section>
+
+                <!-- Sección 1: Prueba de Cobertura Declarada -->
+                <section class="form-section evidence-section">
+                    <h3>📡 Sección 1: Prueba de Cobertura Declarada por Telefónica</h3>
+                    <p class="section-description">
+                        Debes proporcionar evidencia de que Telefónica (u otros operadores) han declarado 
+                        cobertura en tu referencia catastral específica cubierta por UNICO Banda Ancha.
+                    </p>
+                    
+                    <div class="resources-box">
+                        <h4>🔗 Recursos útiles para obtener pruebas:</h4>
+                        <ul>
+                            <li>
+                                <a href="https://avancedigital.mineco.gob.es/banda-ancha/cobertura/Paginas/informacion-cobertura-ba.aspx" target="_blank">
+                                    Portal de Cobertura de Banda Ancha (Ministerio)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.movistar.es/particulares/movil/cobertura/" target="_blank">
+                                    Mapa de Cobertura Movistar
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.cnmc.es/ambitos-de-actuacion/telecomunicaciones/banda-ancha" target="_blank">
+                                    CNMC - Información de Banda Ancha
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://sedeaplicaciones.minetur.gob.es/ServiciosElectronicos/ITI/Ficheros/Consultas/ConsultaCobertura.html" target="_blank">
+                                    Consulta oficial de cobertura ITI
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="operadorDeclarante">Operador que declaró la cobertura *</label>
+                        <select id="operadorDeclarante" name="operadorDeclarante" required>
+                            <option value="">Selecciona un operador</option>
+                            <option value="telefonica">Telefónica/Movistar</option>
+                            <option value="orange">Orange</option>
+                            <option value="vodafone">Vodafone</option>
+                            <option value="masmovil">MásMóvil</option>
+                            <option value="otro">Otro (especificar en descripción)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaDeclaracion">Fecha de la declaración de cobertura</label>
+                        <input type="date" id="fechaDeclaracion" name="fechaDeclaracion">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fuenteCobertura">Fuente de la información de cobertura *</label>
+                        <textarea id="fuenteCobertura" name="fuenteCobertura" rows="3" required 
+                                  placeholder="Describe dónde encontraste la información (web oficial, documento, mapa de cobertura, etc.)"></textarea>
+                    </div>
+
+                    <div class="form-group file-upload">
+                        <label for="pruebasCobertura">Archivos de prueba - Cobertura declarada *</label>
+                        <input type="file" id="pruebasCobertura" name="pruebasCobertura" multiple 
+                               accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx">
+                        <small class="help-text">
+                            Sube capturas de pantalla, PDFs, documentos oficiales, etc. que demuestren la cobertura declarada
+                        </small>
+                    </div>
+                </section>
+
+                <!-- Sección 2: Prueba de Falta de Servicio -->
+                <section class="form-section evidence-section">
+                    <h3>❌ Sección 2: Prueba de que los Operadores NO Proporcionan el Servicio</h3>
+                    <p class="section-description">
+                        Debes proporcionar evidencia de que, a pesar de la cobertura declarada, 
+                        los operadores no proporcionan realmente el servicio.
+                    </p>
+
+                    <div class="resources-box">
+                        <h4>🔗 Recursos para obtener pruebas de falta de servicio:</h4>
+                        <ul>
+                            <li>
+                                <a href="https://www.movistar.es/particulares/internet/fibra-optica/" target="_blank">
+                                    Consulta disponibilidad Movistar
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.orange.es/particulares/internet/fibra" target="_blank">
+                                    Consulta disponibilidad Orange
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.vodafone.es/c/particulares/es/tienda/fijo/internet/fibra/" target="_blank">
+                                    Consulta disponibilidad Vodafone
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.masmovil.es/internet/fibra/" target="_blank">
+                                    Consulta disponibilidad MásMóvil
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaConsulta">Fecha de consulta de disponibilidad *</label>
+                        <input type="date" id="fechaConsulta" name="fechaConsulta" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="operadoresConsultados">Operadores consultados *</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="operadoresConsultados" value="telefonica"> Telefónica/Movistar</label>
+                            <label><input type="checkbox" name="operadoresConsultados" value="orange"> Orange</label>
+                            <label><input type="checkbox" name="operadoresConsultados" value="vodafone"> Vodafone</label>
+                            <label><input type="checkbox" name="operadoresConsultados" value="masmovil"> MásMóvil</label>
+                            <label><input type="checkbox" name="operadoresConsultados" value="otros"> Otros</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="respuestaOperadores">Respuesta de los operadores *</label>
+                        <textarea id="respuestaOperadores" name="respuestaOperadores" rows="4" required 
+                                  placeholder="Describe la respuesta exacta que recibiste de cada operador (sin cobertura, no disponible, etc.)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="metodosContacto">Métodos de contacto utilizados *</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="metodosContacto" value="web"> Consulta web</label>
+                            <label><input type="checkbox" name="metodosContacto" value="telefono"> Llamada telefónica</label>
+                            <label><input type="checkbox" name="metodosContacto" value="tienda"> Visita a tienda</label>
+                            <label><input type="checkbox" name="metodosContacto" value="email"> Correo electrónico</label>
+                            <label><input type="checkbox" name="metodosContacto" value="chat"> Chat online</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group file-upload">
+                        <label for="pruebasFaltaServicio">Archivos de prueba - Falta de servicio *</label>
+                        <input type="file" id="pruebasFaltaServicio" name="pruebasFaltaServicio" multiple 
+                               accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx,.mp3,.mp4">
+                        <small class="help-text">
+                            Sube capturas de pantalla, correos, grabaciones de llamadas, documentos, etc. que demuestren la falta de servicio
+                        </small>
+                    </div>
+                </section>
+
+                <!-- Información Adicional -->
+                <section class="form-section">
+                    <h3>📝 Información Adicional</h3>
+                    <div class="form-group">
+                        <label for="impactoEconomico">Impacto económico del fraude</label>
+                        <textarea id="impactoEconomico" name="impactoEconomico" rows="3" 
+                                  placeholder="Describe cualquier pérdida económica o daño causado por la falta de servicio (trabajo remoto perdido, cambio de domicilio, etc.)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accionesTomadas">Acciones ya tomadas</label>
+                        <textarea id="accionesTomadas" name="accionesTomadas" rows="3" 
+                                  placeholder="Describe si ya has presentado reclamaciones, contactado con organismos reguladores, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentariosAdicionales">Comentarios adicionales</label>
+                        <textarea id="comentariosAdicionales" name="comentariosAdicionales" rows="4" 
+                                  placeholder="Cualquier información adicional que consideres relevante"></textarea>
+                    </div>
+                </section>
+
+                <!-- Consentimiento y Envío -->
+                <section class="form-section">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="consentimiento" name="consentimiento" required>
+                            <span class="checkmark"></span>
+                            Acepto que la información proporcionada sea utilizada para documentar casos de fraude 
+                            en el despliegue de banda ancha y que pueda ser compartida de forma anónima con organismos competentes *
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="contactoFuturo" name="contactoFuturo">
+                            <span class="checkmark"></span>
+                            Acepto ser contactado para obtener información adicional o seguimiento del caso
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">📤 Enviar Denuncia</button>
+                </section>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <strong>Recursos adicionales:</strong> 
+                <a href="https://www.cnmc.es/" target="_blank">CNMC</a> | 
+                <a href="https://www.ine.es/" target="_blank">INE</a> | 
+                <a href="https://avancedigital.mineco.gob.es/" target="_blank">Ministerio Agenda Digital</a>
+            </p>
+            <p>
+                <small>
+                    Este formulario es una herramienta para documentar casos de fraude. 
+                    Para reclamaciones oficiales, contacta con los organismos competentes.
+                </small>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
